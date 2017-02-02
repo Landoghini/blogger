@@ -6,6 +6,8 @@ class ArticlesController < ApplicationController
 
 		def show
 			@article = Article.find(params[:id])
+			@comment = Comment.new
+			@comment.article_id = @article.id
 		end
 
 		def new
@@ -16,6 +18,14 @@ class ArticlesController < ApplicationController
 			@article = Article.new(article_params)
 			@article.save
 			redirect_to article_path(@article)
+			@comment = Comment.new(comment_params)
+			@comment.article_id = params[:article_id]
+			@comment.save
+			redirect_to article_path(@comment.article)
+		end
+
+		def comment_params
+			params.require(:comment).permit(:author_name, :body)
 		end
 
 		def destroy
